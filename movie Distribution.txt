@@ -1,0 +1,121 @@
+count of Buena Vista is 157
+count of Sony is 225
+count of Warner Bros. is 228
+count of 20th Century Fox is 163
+count of Sony Pictures is 2
+count of Paramount Pictures is 176
+count of Universal is 195
+count of New Line is 96
+count of Walt Disney Co. is 2
+count of Columbia is 10
+count of DreamWorks SKG is 70
+count of MGM/UA is 75
+count of Miramax is 95
+count of Lionsgate is 12
+count of Polygram Films is 3
+count of Weinstein Co. is 29
+count of United Artists is 13
+count of Summit is 11
+count of TriStar Pictures is 2
+count of DEJ Productions is 1
+count of Lion's Gate is 54
+count of Warner Independent is 3
+count of Weinstein is 1
+count of Dimension Films is 2
+count of Focus Features is 35
+count of Third Rail is 1
+count of Sony/Tristar is 1
+count of Paramount Vantage is 3
+count of USA Films is 5
+count of Dimension is 20
+count of Sony Classics is 61
+count of Magnolia is 10
+count of Artisan is 19
+count of Summit Entertainment is 3
+count of MGM is 3
+count of RS Entertainment is 1
+count of CBS Films is 3
+count of Freestyle is 2
+count of Senator Films is 1
+count of Fox Searchlight is 55
+count of Warner Independent Pictures is 5
+count of Relativity is 1
+count of New Market is 6
+count of Rogue is 1
+count of FilmDistrict is 1
+count of ThinkFilm is 3
+count of Gramercy is 9
+count of Overture is 6
+count of Walt Disney Pictures is 1
+count of Paramount Classics is 10
+count of Fine Line is 12
+count of Orion is 5
+count of Samuel Goldwyn is 4
+count of Picturehouse is 5
+count of Weinstein/Dimension is 1
+count of Kino is 2
+count of Destination Films is 1
+count of Strand is 3
+count of IFC Films is 10
+count of Newmarket Films is 1
+count of Music Box is 1
+count of Consolidated Pictures Group is 1
+count of October is 2
+count of IDP is 1
+count of Screen Gems is 1
+count of Cannon is 1
+count of Black Diamond Pictures is 1
+count of Eros is 4
+count of First Independent Pictures is 1
+count of First Look is 1
+count of WellSpring is 2
+count of New Yorker is 1
+count of Roadside Attractions is 1
+count of Anchor Bay is 1
+count of Universal/Rogue is 1
+count of Apparition is 3
+count of Weinstein Ci. is 1
+count of Cinema Service is 1
+count of Providence is 1
+count of Freestyle/Darko is 1
+count of Roadside is 2
+count of Indican is 2
+count of Yash Raj is 1
+count of RKO is 1
+count of Oscilloscope is 1
+count of Lions Gate/IFC Films/Fellowship Adventure Group is 1
+count of 3D Entertainment is 1
+count of Cowboy is 2
+count of October Films is 1
+count of Tartan is 1
+count of Palm Pictures is 1
+count of Big Pictures is 1
+count of IDP/Gold Circle is 1
+count of Overture Films is 1
+count of Universal/Arenas Entertainment is 1
+count of Phaedra is 1
+count of Legacy is 1
+count of Good Machine is 1
+count of Shooting Gallery is 1
+count of Small Planet is 1
+count of Access is 1
+count of Island/Alive is 1
+count of Artistic License is 1
+count of Zeitgeist is 4
+count of Samuel Goldwyn Films is 1
+count of New Films Int'l is 1
+count of Lions Gate is 1
+count of Roxie Releasing is 1
+count of Videos is 1
+count of Trimark is 1
+count of Rogue Pictures is 1
+count of IDP/Goldwyn is 1
+count of CFP is 1
+count of Fabrication Films is 1
+count of Zion is 1
+count of ART is 1
+count of Painted Zebra Releasing is 1
+count of Filmways is 1
+count of Shotwell Media is 1
+count of IDP/Sam Goldwyn is 1
+count of Truly Indie is 1
