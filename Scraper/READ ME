@@ -1,0 +1,1 @@
+#Script srapes data from resumes saved in a word doc and returns the data mined as a csv for later ingestion. 
