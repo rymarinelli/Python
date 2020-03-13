@@ -1,0 +1,27 @@
+import os
+
+from pyresparser import ResumeParser
+
+import pandas as pd
+
+
+os.chdir("C:/Users/rmarinelli4/Desktop/Corpus")
+
+def Parser(String):
+    data = ResumeParser(String).get_extracted_data()
+
+    skill = data["skills"]
+
+    name = data["name"]
+    name = name.replace('New Orleans','')
+
+    skill.append(name)
+    lastitem = skill[-1]
+    firstitem = skill[0]
+
+    skill[0] = lastitem
+    skill[-1] = firstitem
+
+
+    skill = pd.DataFrame(skill)
+    skill.to_csv(name.strip() + ".csv")
