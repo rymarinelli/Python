@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Nov 30 20:32:06 2020
-
-@author: ryanm
-"""
 
 from tkinter import * 
 from tkinter.ttk import *
@@ -27,11 +21,11 @@ root.geometry('200x200')
 
 class File():
     
-    def __init__(self, content):
-        self.content = content
+    def __init__(self):
+        self.content = ""
         
     def setFile(self):
-        file = selectFile()
+        file = self.selectFile()
         self.content = file
            
         
@@ -41,15 +35,15 @@ class File():
         return self.content
 
 
-    def selectFile():
+    def selectFile(self):
         file = askopenfile(mode ='r', filetypes =[('Comma-Delimited', '*.csv')]) 
         if file is not None: 
            content = file.read() 
            return(content)
     
        
-    def toJSON():
-        content = File.getFile()
+    def toJSON(self):
+        content = self.getFile()
         csvFile = pd.read_csv(content)
         df = pd.DataFrame(csvFile)
         jsonFile = df.to_json(orient="split")
@@ -58,10 +52,10 @@ class File():
        
     fileProperty = property(getFile, setFile)
 
-          
-convertButton = Button(root, text = "Convert", command = lambda: File.toJSON(File.content))      
-btn = Button(root, text ='Open', command = lambda: File.setFile()) 
-btnTwo = ttk.Button(root, text = 'Save', command = lambda : File.getFile()) 
+file = File()
+convertButton = Button(root, text = "Convert", command = lambda: file.toJSON())      
+btn = Button(root, text ='Open', command = lambda: file.setFile()) 
+btnTwo = ttk.Button(root, text = 'Save', command = lambda : file.getFile()) 
 btnTwo.pack(side = TOP, pady = 20) 
   
 
