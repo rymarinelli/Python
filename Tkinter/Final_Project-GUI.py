@@ -22,12 +22,13 @@ root.geometry('200x200')
 # file in read mode and only Python files 
 # will be opened 
 
+global content
 
 class File():
     
     
     def __init__(self):
-        self.content = content
+         self.content = content
     
     def selectFile():
         file = askopenfile(mode ='r', filetypes =[('Comma-Delimited', '*.csv')]) 
@@ -36,18 +37,18 @@ class File():
            return(content)
           
      
-        def toJSON():    
-            content = File.selectFile()
-            csvFile = pd.read_csv(content)
-            df = pd.DataFrame(csvFile)
-            jsonFile = df.to_json(orient="split")
-            asksaveasfile(jsonFile, defaultextension = ".JSON") 
+    def toJSON(content):
+        content = File.selectFile()
+        csvFile = pd.read_csv(content)
+        df = pd.DataFrame(csvFile)
+        jsonFile = df.to_json(orient="split")
+        return(jsonFile)
         
-        toJSON()
+       
        
 
         
-convertButton = Button(root, text = "Convert", command = lambda: File.toJSON())      
+convertButton = Button(root, text = "Convert", command = lambda: File.toJSON(content))      
 btn = Button(root, text ='Open', command = lambda: File.selectFile()) 
 btnTwo = ttk.Button(root, text = 'Save', command = lambda : save()) 
 btnTwo.pack(side = TOP, pady = 20) 
