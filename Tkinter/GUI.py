@@ -10,8 +10,7 @@ from matplotlib.figure import Figure
 import time
 from pathlib import Path
 import os
-
-from tkinter.messagebox import showinfo
+from tkinter import messagebox
 
 
 # The input is going to be three csv files
@@ -61,35 +60,41 @@ class File():
     def setFile(self):
         downloads = str(os.path.join(Path.home(), "Downloads"))
         file_path = downloads + "\combined_test.csv"
-        file = self.selectFile(file_list)
+        #file = self.selectFile(file_list)
 
 
-        print(file_list)
-        #It might be better to replace pd.concat with join
-        #Faculity ID might be a good choice here
+        print('Making sure there are no None values in file_path')
+        [path for path in file_list if path is not None]
 
-        #combined_csv = pd.concat([pd.read_csv(f) for f in file_list])
+        while len(file_list) <= 3:
+            file = self.selectFile(file_list)
+            df = pd.read_csv(file_list[0])
+            df_2 = pd.read_csv(file_list[-1])
 
-        #Start loop with the 2nd file
-        #Read in the first file based on the zeroth position
-        #If join fails, add columns
-
-        df = pd.read_csv(file_list[0])
-        while len(file_list) >= 3:
+            print("Waiting for the for loop")
             for f in range(1,len(file_list)):
-                print(file_list[f])
-                df_1 = pd.read_csv(file_list[f])
-                df_2 = pd.concat([df.reset_index(drop=True), df_1], axis=1)
-                combined_csv = df_2
-                combined_csv.to_csv(file_path, index=False)
+                print("Entering for loop")
+                try:
+                    print(file_list)
+                    df_1 = pd.read_csv(file_list[f])
+
+                    df_2 = pd.concat([df.reset_index(drop=True), df_1], axis=1)
+                    print('File finished combining')
+                except:
+                    print(file_list)
+                    self.selectFile(file_list)
+
+                #combined_csv = df_2
+                #combined_csv.to_csv(file_path, index=False)
+
 
             combined_csv = df_2
             combined_csv.to_csv(file_path, index=False)
-            break
+            #break
 
 
         file = self.selectFile(file_list)
-        self.content = file
+
 
     def setPath(self):
         self.selectFile()
@@ -107,22 +112,40 @@ class File():
     # Clear the file path variable
     # Select the Content of the inital file
     def selectFile(self,file_list):
-        file = askopenfile(mode='r', filetypes=[('Comma-Delimited', '*.csv')])
-        self.filePath = file.name
-        if file is not None:
-            content = file.read()
-            file_list.append(self.filePath)
-            self.filePath = None
+        try:
+            if len(file_list) < 3:
+                file = askopenfile(mode='r', filetypes=[('Comma-Delimited', '*.csv')])
+           # file_list = [files for files in file_list if files is not None]
+                self.filePath = file.name
+            else:
+                messagebox.showwarning("Warning", "Please continue to attach files")
 
-            if len(file_list) == 4:
-                file_list.clear()
-                print("Assign File Path")
-                downloads = str(os.path.join(Path.home(), "Downloads"))
-                file_path = downloads + "\combined_test.csv"
-                self.filePath = file_path
-                content = pd.read_csv(file_path)
-                print(content)
-                return content
+        except:
+            messagebox.showwarning("Warning", "File not selected")
+
+            file = askopenfile(mode='r', filetypes=[('Comma-Delimited', '*.csv')])
+
+        if len(file_list) == 3:
+            messagebox.showwarning("Warning", "File Limit reached ")
+
+        try:
+            if file is not None:
+                content = file.read()
+                file_list.append(self.filePath)
+                self.filePath = None
+
+                if len(file_list) == 4:
+                    file_list.clear()
+                    print("Assign File Path")
+                    downloads = str(os.path.join(Path.home(), "Downloads"))
+                    file_path = downloads + "\combined_test.csv"
+                    self.filePath = file_path
+                    content = pd.read_csv(file_path)
+                    print(content)
+                    return content
+        except:
+            print("file not selected corrected ")
+            print(file_list)
 
         return content
 
