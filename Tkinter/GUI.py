@@ -11,6 +11,7 @@ import time
 from pathlib import Path
 import os
 from tkinter import messagebox
+import sys
 
 
 # The input is going to be three csv files
@@ -19,6 +20,8 @@ from tkinter import messagebox
 
 
 def popup_bonus():
+    value = File()
+    value.process = True
     win = Toplevel()
     win.wm_title("Window")
 
@@ -29,6 +32,7 @@ def popup_bonus():
     b_1 = Button(win, text="Add_Data", command= lambda: file.setFile())
     b.grid(row=1, column=0)
     b_1.grid(row=2,column=0)
+
 
 root = Tk()
 #root.geometry('200x200')
@@ -56,6 +60,8 @@ class File():
     def __init__(self):
         self.content = ""
         self.filePath = ""
+        self.process = True
+
 
     def setFile(self):
         downloads = str(os.path.join(Path.home(), "Downloads"))
@@ -66,10 +72,19 @@ class File():
         print('Making sure there are no None values in file_path')
         [path for path in file_list if path is not None]
 
-        while len(file_list) <= 3:
+        while len(file_list) <= 2:
+            print("Trying to add file")
             file = self.selectFile(file_list)
-            df = pd.read_csv(file_list[0])
-            df_2 = pd.read_csv(file_list[-1])
+            try:
+                df = pd.read_csv(file_list[0])
+            except:
+                df = pd.read_csv(self.filePath)
+
+            try:
+                df_2 = pd.read_csv(file_list[-1])
+            except:
+                continue
+
 
             print("Waiting for the for loop")
             for f in range(1,len(file_list)):
@@ -87,13 +102,16 @@ class File():
                 #combined_csv = df_2
                 #combined_csv.to_csv(file_path, index=False)
 
+            if len(file_list) >= 3:
+                combined_csv.to_csv(file_path, index=False)
+                break
+
+            else:
+                file = self.selectFile(file_list)
 
             combined_csv = df_2
             combined_csv.to_csv(file_path, index=False)
             #break
-
-
-        file = self.selectFile(file_list)
 
 
     def setPath(self):
@@ -111,43 +129,44 @@ class File():
     #Read the file path of the selected file into a list
     # Clear the file path variable
     # Select the Content of the inital file
-    def selectFile(self,file_list):
-        try:
-            if len(file_list) < 3:
-                file = askopenfile(mode='r', filetypes=[('Comma-Delimited', '*.csv')])
-           # file_list = [files for files in file_list if files is not None]
-                self.filePath = file.name
-            else:
-                messagebox.showwarning("Warning", "Please continue to attach files")
-
-        except:
-            messagebox.showwarning("Warning", "File not selected")
-
+    def selectFile(self, file_list):
+        if len(file_list) < 3 and self.process is True:
             file = askopenfile(mode='r', filetypes=[('Comma-Delimited', '*.csv')])
+            print(file.name)
+            try:
+                self.filePath = file.name
+            except:
+                file.name = ""
+        else:
+            messagebox.showwarning("Warning", "File Limit reached ")
+            print("I should close the window")
+            #root.quit()
+            #root.update()
 
         if len(file_list) == 3:
+            print("I should warn the end user")
             messagebox.showwarning("Warning", "File Limit reached ")
 
         try:
-            if file is not None:
+            if file is not None and self.process is True:
                 content = file.read()
                 file_list.append(self.filePath)
                 self.filePath = None
 
-                if len(file_list) == 4:
-                    file_list.clear()
-                    print("Assign File Path")
-                    downloads = str(os.path.join(Path.home(), "Downloads"))
-                    file_path = downloads + "\combined_test.csv"
-                    self.filePath = file_path
-                    content = pd.read_csv(file_path)
-                    print(content)
-                    return content
+            if len(file_list) >= 3 and self.process is True:
+                file_list.clear()
+                print("Assign File Path")
+                downloads = str(os.path.join(Path.home(), "Downloads"))
+                file_path = downloads + "\combined_test.csv"
+                self.filePath = file_path
+                content = pd.read_csv(file_path)
+                print(content)
+                self.process = False
         except:
-            print("file not selected corrected ")
-            print(file_list)
+            self.process = True
+            return self.process
 
-        return content
+            #return self.content
 
     def toJSON(self):
         try:
