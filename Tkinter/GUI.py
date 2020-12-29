@@ -103,6 +103,7 @@ class File():
                 #combined_csv.to_csv(file_path, index=False)
 
             if len(file_list) >= 3:
+                print("This is when we are finished the loop")
                 combined_csv.to_csv(file_path, index=False)
                 break
 
@@ -145,7 +146,7 @@ class File():
 
         if len(file_list) == 3:
             print("I should warn the end user")
-            messagebox.showwarning("Warning", "File Limit reached ")
+            messagebox.showwarning("Warning", "File Limit reached")
 
         try:
             if file is not None and self.process is True:
@@ -159,6 +160,11 @@ class File():
                 downloads = str(os.path.join(Path.home(), "Downloads"))
                 file_path = downloads + "\combined_test.csv"
                 self.filePath = file_path
+
+                test = File()
+                print("Cleaning File")
+                test.data_Cleaner(file_path)
+                print("File Cleaned")
                 content = pd.read_csv(file_path)
                 print(content)
                 self.process = False
@@ -189,6 +195,64 @@ class File():
         for i in value:
             fileOutput.write(i)
         fileOutput.close()
+
+    def data_Cleaner(self, path):
+        df = pd.read_csv(path)
+        def program_Status(df):
+            program_status = df['PROGRAM STATUS'] == 'ACTIVE'
+            df = df[program_status]
+            return df
+
+        program_Status(df)
+
+        def extract_Data(df):
+            establishment_list = list()
+            risk_list = list()
+            value_list = list()
+
+            for i in range(0, len(df)):
+                try:
+                    description = df['PE DESCRIPTION'][i]
+                    inspect_match = re.findall('[A-Z]+', description)
+                    establishment = inspect_match[0]
+                    risk = inspect_match[2] + " " + inspect_match[3]
+                    value = description[description.find("(") + 1:description.find(")")]
+
+                    establishment_list.append(establishment)
+                    risk_list.append(risk)
+                    value_list.append(value)
+                except:
+                    establishment_list.append("Place-Holder")
+                    risk_list.append("Place-Holder")
+                    value_list.append(0)
+                    continue
+
+            est = pd.Series(establishment_list)
+            r = pd.Series(risk_list)
+            val = pd.Series(value_list)
+
+            df['Establishment'] = est.values
+            df['Risk'] = r.values
+            df["Seating"] = val.values
+
+            return (df)
+
+        extract_Data(df)
+
+        def extract_Year(df):
+            selected_columns = df[['SCORE', 'Zip Codes', 'Seating', 'ACTIVITY DATE']]
+            year_list = list()
+
+            for i in df['ACTIVITY DATE']:
+                year = re.findall(r'[0-9][0-9][0-9][0-9]', i)
+                year_list.append(year[0])
+            year_series = pd.Series(year_list)
+            df['Year'] = year_series.values
+            return (df)
+
+        extract_Year(df)
+
+        df.to_csv(path)
 
 def plot(root, canvas):
     df = pd.read_csv(file.getPath())
