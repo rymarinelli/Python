@@ -12,7 +12,7 @@ from pathlib import Path
 import os
 from tkinter import messagebox
 import sys
-
+import sqlite3
 
 # The input is going to be three csv files
 # You will need to prompt for input and join them
@@ -34,6 +34,82 @@ def popup_bonus():
     b_1.grid(row=2,column=0)
 
 
+def generate_Report():
+    value = File()
+    value.process = True
+    win = Toplevel()
+    win.wm_title("Window")
+
+    l = Label(win, text="Input")
+    l.grid(row=0, column=0)
+
+    b = Button(win, text="End", command=win.destroy)
+    b_1 = Button(win, text="Set_Query", command= lambda: generate_Query())
+    b.grid(row=1, column=0)
+    b_1.grid(row=2,column=0)
+
+def generate_Query():
+    value = File()
+    value.process = True
+    win = Toplevel()
+    win.wm_title("Window")
+
+    l = Label(win, text="Group By")
+    l.grid(row=0, column=0)
+
+    b = Button(win, text="Finished", command=win.destroy)
+    b_1 = Button(win, text="Seating", command=lambda:set_Query())
+    b_2 = Button(win, text="Zip Codes", command=lambda:set_Query_1())
+    b_3 = Button(win, text="Seating & Zip Codes", command=lambda: set_Query())
+
+    b.grid(row=1, column=0)
+    b_1.grid(row=2, column=0)
+    b_2.grid(row=3, column = 0)
+    b_3.grid(row=4, column = 0)
+
+def set_Query():
+    conn = sqlite3.connect('TestDB.db')
+    df = pd.read_csv('C:\\Users\\rmarinelli4\\Downloads\\combined_test.csv')
+    df.columns = df.columns.str.replace(' ', '_')
+    try:
+        df.to_sql('DATASET', conn, if_exists='append', index=False)
+    except:
+        pass
+    test = conn.execute('''SELECT AVG(Score)
+                            FROM DATASET
+                            GROUP BY Year, Seating ''')
+    test = test.fetchall()
+    print(test)
+
+def set_Query_1():
+    conn = sqlite3.connect('TestDB.db')
+    df = pd.read_csv('C:\\Users\\rmarinelli4\\Downloads\\combined_test.csv')
+    df.columns = df.columns.str.replace(' ', '_')
+    try:
+        df.to_sql('DATASET', conn, if_exists='append', index=False)
+    except:
+        pass
+    test = conn.execute('''SELECT AVG(Score)
+                            FROM DATASET
+                            GROUP BY Year, Zip_Codes ''')
+    test = test.fetchall()
+    print(test)
+
+def set_Query_2():
+    conn = sqlite3.connect('TestDB.db')
+    df = pd.read_csv('C:\\Users\\rmarinelli4\\Downloads\\combined_test.csv')
+    df.columns = df.columns.str.replace(' ', '_')
+    try:
+        df.to_sql('DATASET', conn, if_exists='append', index=False)
+    except:
+        pass
+    test = conn.execute('''SELECT AVG(Score)
+                            FROM DATASET
+                            GROUP BY Year, Zip_Codes, Seating ''')
+    test = test.fetchall()
+    print(test)
+
+
 root = Tk()
 #root.geometry('200x200')
 lf = Labelframe(root, text='Plot Area')
@@ -47,6 +123,7 @@ ax = fig.add_subplot(111)
 canvas = FigureCanvasTkAgg(fig, master=root)
 
 button_bonus = Button(root, text="Bonuses", command=popup_bonus)
+button_Query = Button(root, text="Query_Button", command=generate_Report)
 
 
 # This function will be used to open
@@ -261,10 +338,8 @@ def plot(root, canvas):
     canvas.draw()
 
 
-
-
-
 file = File()
+queryButton = Button(root, text="Query", command=lambda: file.toJSON())
 convertButton = Button(root, text="Convert", command=lambda: file.toJSON())
 selectButton = Button(root, text='Open', command=lambda: file.selectFile(file_list))
 saveButton = Button(root, text="Back-up", command=lambda: file.saveFile())
@@ -275,6 +350,7 @@ convertButton.grid(row=2, column=1)
 saveButton.grid(row=3, column=1)
 plotButton.grid(row=4, column=1)
 button_bonus.grid(row=5, column =1)
+button_Query.grid(row=6,column=1)
 
 canvas.get_tk_widget().grid(row=0, column=0)
 mainloop()
