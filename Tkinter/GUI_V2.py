@@ -2,9 +2,20 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter.font import Font
 import pandas as pd
+from tkinter import *
+from tkinter.filedialog import askopenfile
+import os
+import sqlite3
+from pathlib import Path
+from File import *
+
+from Functions import *
+
 
 LARGEFONT = ("Verdana", 35)
 
+
+file_list = list()
 
 class RestaurantApp(tk.Tk):
 
@@ -80,28 +91,75 @@ class Page1(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        tk.Frame.config(self, background='#add8e6')
+
+
+        style = ttk.Style(self)
+        style.configure('TLabel', background='#add8e6', foreground='#FF69B4')
+        style.configure('TFrame', background='#add8e6')
+        style.configure("Bold.TButton", font=('Sans', '10', 'bold'))
+
+
+        div = Label(self)
+        div.grid(row=0, column=1, padx=60, pady = 60)
+
         label = ttk.Label(self, text="Page 1", font=LARGEFONT)
-        label.grid(row=0, column=4, padx=10, pady=10)
+        label.grid(row=0, column=2, padx=10, pady=10)
 
         # button to show frame 2 with text
         # layout2
         button1 = ttk.Button(self, text="StartPage",
-                             command=lambda: controller.show_frame(StartPage))
+                             command=lambda: controller.show_frame(StartPage), style = "Bold.TButton")
+
+        button_bonus = ttk.Button(self, text="Add Data ", command=popup_bonus, style = "Bold.TButton")
+        button_bonus.grid(row=1, column=1)
+
+        label = ttk.Label(self)
+        label.grid(row=1, column=0, padx=15, pady=10)
+
+        saveButton = ttk.Button(self, text="Save", command=lambda: file.saveFile(), style = "Bold.TButton")
+        saveButton.grid(row=2, column=1, pady = 50)
+
+        #div = Label(self)
+        #div.grid(row=1, column=2, padx = 100)
+
+        button_Query = ttk.Button(self, text="Query", command=generate_Report, style = "Bold.TButton")
+        button_Query.grid(row=1, column=3)
+
+        convertButton = ttk.Button(self, text="Convert", command=lambda: file.toJSON(), style = "Bold.TButton")
+        convertButton.grid(row=2, column=3)
+
 
         # putting the button in its place
         # by using grid
-        button1.grid(row=1, column=1, padx=10, pady=10)
+        button1.grid(row=3, column=1, pady=10)
 
         # button to show frame 2 with text
         # layout2
         button2 = ttk.Button(self, text="Page 2",
-                             command=lambda: controller.show_frame(Page2))
+                             command=lambda: controller.show_frame(Page2), style = "Bold.TButton")
 
         # putting the button in its place by
         # using grid
-        button2.grid(row=2, column=1, padx=10, pady=10)
+        button2.grid(row=3, column=3, padx=10, pady=10)
 
-    # third window frame page2
+        file = File()
+
+
+
+        #selectButton = ttk.Button(self, text='Open', command=lambda: file.selectFile(file_list))
+
+        #queryButton = Button(self, text="Query", command=lambda: file.toJSON())
+
+
+        #selectButton.grid(row=1, column=1)
+
+
+
+
+
+
+        # third window frame page2
 
 
 class Page2(tk.Frame):
@@ -130,207 +188,81 @@ class Page2(tk.Frame):
 
     # Driver Code
 
-file_list = list()
 
-class File():
+def popup_bonus():
+    value = File()
+    value.process = True
+    win = Toplevel()
+    win.wm_title("Window")
 
-    def __init__(self):
-        self.content = ""
-        self.filePath = ""
-        self.process = True
+    l = Label(win, text="Input")
+    l.grid(row=0, column=0)
 
+    b = Button(win, text="Completed", command=win.destroy)
+    b_1 = Button(win, text="Add_Data", command= lambda: value.setFile())
+    b_2 = Button(win, text="Restart", command= lambda: value.restart())
 
-    def setFile(self):
-        downloads = str(os.path.join(Path.home(), "Downloads"))
-        file_path = downloads + "\combined_test.csv"
-        #file = self.selectFile(file_list)
-
-
-        print('Making sure there are no None values in file_path')
-        [path for path in file_list if path is not None]
-
-        while len(file_list) <= 2:
-            print("Trying to add file")
-            file = self.selectFile(file_list)
-            try:
-                df = pd.read_csv(file_list[0])
-            except:
-                df = pd.read_csv(self.filePath)
-
-            try:
-                df_2 = pd.read_csv(file_list[-1])
-            except:
-                continue
+    b.grid(row=1, column=0)
+    b_1.grid(row=2,column=0)
+    b_2.grid(row=3,column =0)
 
 
-            print("Waiting for the for loop")
-            for f in range(1,len(file_list)):
-                print("Entering for loop")
-                try:
-                    print(file_list)
-                    df_1 = pd.read_csv(file_list[f])
+def generate_Report():
+    value = File()
+    value.process = True
+    win = Toplevel()
+    win.wm_title("Window")
 
-                    df_2 = pd.concat([df.reset_index(drop=True), df_1], axis=1)
-                    print('File finished combining')
-                except:
-                    print(file_list)
-                    self.selectFile(file_list)
+    l = Label(win, text="Input")
+    l.grid(row=0, column=0)
 
-                #combined_csv = df_2
-                #combined_csv.to_csv(file_path, index=False)
+    b = Button(win, text="End", command=win.destroy)
+    b_1 = Button(win, text="Set_Query", command= lambda: generate_Query())
+    b.grid(row=1, column=0)
+    b_1.grid(row=2,column=0)
 
-            if len(file_list) >= 3:
-                print("This is when we are finished the loop")
-                combined_csv.to_csv(file_path, index=False)
-                break
+def generate_Query():
+    value = File()
+    value.process = True
+    win = Toplevel()
+    win.wm_title("Window")
 
-            else:
-                file = self.selectFile(file_list)
+    select = Query()
+    l = Label(win, text="Group By")
+    l.grid(row=0, column=0)
 
-            combined_csv = df_2
-            combined_csv.to_csv(file_path, index=False)
-            #break
+    b = Button(win, text="Finished", command=win.destroy)
+    b_1 = Button(win, text="Aggregate", command= lambda:aggregate(select))
+    b_2 = Button(win, text="Seating", command=lambda:select.group_By_1(parameter_list))
+    b_3 = Button(win, text="Zip Codes", command=lambda:select.group_By_2(parameter_list))
+    b_4 = Button(win, text="Seating & Zip Codes", command=lambda: select.group_By(parameter_list))
 
-
-    def setPath(self):
-        self.selectFile()
-
-    def getPath(self):
-        return(self.filePath)
-
-    def getFile(self):
-        return self.content
+    b.grid(row=1, column=0)
+    b_1.grid(row=2,column=1)
+    b_2.grid(row=2, column=0)
+    b_3.grid(row=3, column = 0)
+    b_4.grid(row=4, column = 0)
 
 
-#Working on now
-    #Read in data from file
-    #Read the file path of the selected file into a list
-    # Clear the file path variable
-    # Select the Content of the inital file
-    def selectFile(self, file_list):
-        if len(file_list) < 3 and self.process is True:
-            file = askopenfile(mode='r', filetypes=[('Comma-Delimited', '*.csv')])
-            print(file.name)
-            try:
-                self.filePath = file.name
-            except:
-                file.name = ""
-        else:
-            messagebox.showwarning("Warning", "File Limit reached ")
-            print("I should close the window")
-            #root.quit()
-            #root.update()
+def aggregate(select):
+    value = File()
+    value.process = True
+    win = Toplevel()
+    win.wm_title("Window")
 
-        if len(file_list) == 3:
-            print("I should warn the end user")
-            messagebox.showwarning("Warning", "File Limit reached")
+    l = Label(win, text="Input")
+    l.grid(row=0, column=0)
 
-        try:
-            if file is not None and self.process is True:
-                content = file.read()
-                file_list.append(self.filePath)
-                self.filePath = None
 
-            if len(file_list) >= 3 and self.process is True:
-                file_list.clear()
-                print("Assign File Path")
-                downloads = str(os.path.join(Path.home(), "Downloads"))
-                file_path = downloads + "\combined_test.csv"
-                self.filePath = file_path
+    b = Button(win, text="End", command=win.destroy)
+    b_1 = Button(win, text="Mean", command= lambda: select.mean())
+    b_2 = Button(win, text="Median", command=lambda: select.median())
+    b_3 = Button(win, text="Mode", command=lambda: select.mode())
 
-                test = File()
-                print("Cleaning File")
-                test.data_Cleaner(file_path)
-                print("File Cleaned")
-                content = pd.read_csv(file_path)
-                print(content)
-                self.process = False
-        except:
-            self.process = True
-            return self.process
-
-            #return self.content
-
-    def toJSON(self):
-        try:
-            csvFile = pd.read_csv(self.filePath)
-        except:
-            csvFile = pd.read_csv(file_list[-1])
-        df = pd.DataFrame(csvFile)
-        result = df.to_json(orient="columns")
-        parsed = json.loads(result)
-        jsonFile = json.dumps(parsed, indent=4)
-        self.content = jsonFile
-
-    def saveFile(self):
-        fileInput = self.content
-        print(fileInput)
-        fileOutput = open("Export.txt", "w+")
-        value = list()
-        for line in fileInput:
-            value.append(line)
-        for i in value:
-            fileOutput.write(i)
-        fileOutput.close()
-
-    def data_Cleaner(self, path):
-        df = pd.read_csv(path)
-        def program_Status(df):
-            program_status = df['PROGRAM STATUS'] == 'ACTIVE'
-            df = df[program_status]
-            return df
-
-        program_Status(df)
-
-        def extract_Data(df):
-            establishment_list = list()
-            risk_list = list()
-            value_list = list()
-
-            for i in range(0, len(df)):
-                try:
-                    description = df['PE DESCRIPTION'][i]
-                    inspect_match = re.findall('[A-Z]+', description)
-                    establishment = inspect_match[0]
-                    risk = inspect_match[2] + " " + inspect_match[3]
-                    value = description[description.find("(") + 1:description.find(")")]
-
-                    establishment_list.append(establishment)
-                    risk_list.append(risk)
-                    value_list.append(value)
-                except:
-                    establishment_list.append("Place-Holder")
-                    risk_list.append("Place-Holder")
-                    value_list.append(0)
-                    continue
-
-            est = pd.Series(establishment_list)
-            r = pd.Series(risk_list)
-            val = pd.Series(value_list)
-
-            df['Establishment'] = est.values
-            df['Risk'] = r.values
-            df["Seating"] = val.values
-
-            return (df)
-
-        extract_Data(df)
-
-        def extract_Year(df):
-            selected_columns = df[['SCORE', 'Zip Codes', 'Seating', 'ACTIVITY DATE']]
-            year_list = list()
-
-            for i in df['ACTIVITY DATE']:
-                year = re.findall(r'[0-9][0-9][0-9][0-9]', i)
-                year_list.append(year[0])
-            year_series = pd.Series(year_list)
-            df['Year'] = year_series.values
-            return (df)
-
-        extract_Year(df)
-
-        df.to_csv(path)
-
+    b.grid(row=1, column=0)
+    b_1.grid(row=2,column=0)
+    b_2.grid(row=3,column=0)
+    b_3.grid(row= 4, column =0 )
 
 app = RestaurantApp()
 app.minsize(500,500)
