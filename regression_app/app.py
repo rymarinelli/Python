@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 
 # Configuration settings
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = '/home/rymarinelli/Python/regression_app/uploads'
 ALLOWED_EXTENSIONS = {'csv'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # Optional: increase file size limit
@@ -25,6 +25,7 @@ def allowed_file(filename):
 def index():
     return render_template('upload.html')
 
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -33,11 +34,22 @@ def upload_file():
     if file.filename == '':
         return redirect(request.url)
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return 'File uploaded successfully'
+        filename = secure_filename(file.filename)  # Define filename here
+        try:
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return 'File uploaded successfully'
+        except Exception as e:
+            print(f"Failed to save file: {e}")
+            return "Failed to upload file due to an internal error."
     else:
         return redirect(request.url)
+
+@app.route('/list-uploads')
+def list_uploads():
+    files = os.listdir(app.config['UPLOAD_FOLDER'])
+    csv_files = [f for f in files if f.endswith('.csv')]
+    return render_template('list_uploads.html', files=csv_files)
+
 
 # Run the application if this file is executed as the main program
 if __name__ == '__main__':

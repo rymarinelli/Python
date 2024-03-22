@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select an Uploaded File</title>
+</head>
+<body>
+    <h1>Select an Uploaded CSV File</h1>
+    <form action="/process-selection" method="post">
+        <select name="selected_file">
+            {% for file in files %}
+            <option value="{{ file }}">{{ file }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Process File">
+    </form>
+</body>
+</html>
+
